@@ -47,11 +47,18 @@ app.get('/', (req, res) => {
     res.render('index.ejs');
 });
 
+app.get('/getWeather', (req, res) => {
+
+  res.render('index.ejs');
+});
+
 app.post('/getWeather',async (req,res)=>{
     //splitting countries with , delimter and generating array
-    const countries = req.body.country.split(',');
+    const allCountries = req.body.country.split(',');
+    const countries = allCountries.filter((str) => str.trim() !== '');
     console.log(countries)
     let data = await Promise.all(countries.map(async (country)=>{
+            console.log(country.length);
             let out = await weatherInfo(country);
             let obj = {};
             obj[country] = out;
