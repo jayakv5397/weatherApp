@@ -12,19 +12,35 @@ app.use(morgan('short'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-
 const baseURL='https://api.openweathermap.org/data/2.5/weather?appid='+process.env.API_KEY+'&units=metric';
 
 async function weatherInfo(country) {
 
-    let res = await axios.get(baseURL+"&q="+country);
-  
-    let data = res.data;
-    console.log(data.main.temp);
-    return data.main.temp+"C"
-  }
+    // let res = await axios.get(baseURL+"&q="+country);
 
-let cities=[{"paris":"13.27C"},{"tirupati":"25.57C"},{"bangalore":"25.8C"}];
+    let data = await axios.get(baseURL+"&q="+country)
+    .then(function ({data}) {
+      let obj = {};
+      obj.cod=data.cod;
+      obj.message=data.main.temp+"C";
+      console.log(obj);
+      return obj.message;
+    })
+    .catch(function (error) {
+     let data = error.response.data;
+     let obj = {};
+      obj.cod=data.cod;
+      obj.message=data.message;
+      console.log(obj);
+      return obj.message
+    });
+  
+    // let data = res.data;
+    // console.log(data.main.temp);
+    // let output = data.main.temp+"C"
+    return data;
+
+  }
 
 app.get('/', (req, res) => {
 
