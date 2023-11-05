@@ -16,28 +16,25 @@ const baseURL='https://api.openweathermap.org/data/2.5/weather?appid='+process.e
 
 async function weatherInfo(country) {
 
-    // let res = await axios.get(baseURL+"&q="+country);
-
     let data = await axios.get(baseURL+"&q="+country)
     .then(function ({data}) {
       let obj = {};
       obj.cod=data.cod;
       obj.message=data.main.temp+"C";
+      obj.iconID=data.weather[0].icon;
       console.log(obj);
-      return obj.message;
+      return [obj.message,obj.iconID];
     })
     .catch(function (error) {
      let data = error.response.data;
      let obj = {};
       obj.cod=data.cod;
       obj.message=data.message;
+      obj.iconID="01d";
       console.log(obj);
-      return obj.message
+      return [obj.message,obj.iconID];
     });
-  
-    // let data = res.data;
-    // console.log(data.main.temp);
-    // let output = data.main.temp+"C"
+
     return data;
 
   }
